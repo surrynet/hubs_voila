@@ -3,6 +3,7 @@ import sys
 import getopt
 import json
 import signal
+import socket
 from subprocess import run, getoutput
 from threading import Thread
 
@@ -13,7 +14,6 @@ def usage():
 
 Voila 서버 실행과 configurable-http-proxy의 사용을 단순화한 운영툴이다.
 CONFIGPROXY_AUTH_TOKEN 가 환경변수로 있어야 한다.
-jupyter terminal 에서 실행하지 않을시 JUPYTERHUB_USER 환경변수가 존재해야 한다.
 
 Actions
 =======
@@ -30,6 +30,7 @@ Options
     Voila 서버의 포트
 -s, --suffix <String>
     JupyterHub에서 Voila 서버의 접근 경로 /voila/<String>
+    동일한 suffix가 존재하지 않도록 해야 한다.
     브라우저 접근시 "http://JUPYTERHUB_HOST:PORT/voila/<String>/"
     traefix 사용시 JUPYTERHUB_HOST:PORT 없이 jupyter 도메인으로 접근 가능하다.
 -b, --back <String(light|dark)>
@@ -81,8 +82,6 @@ def main():
     action = 'status'
 
     try:
-        jupyterhub_user = os.environ['JUPYTERHUB_USER']
-
         if len(sys.argv) > 1 and sys.argv[1]:
             action = sys.argv[1]
             if action in ('-h', '--help'):
@@ -95,7 +94,7 @@ def main():
  
         opts, args = getopt.getopt(sys.argv[2:], 'p:s:b:t:eh', ['port=', 'suffix=', 'theme=', 'template=', 'enable_nbextensions', 'help'])
         for o, a in opts:
-            if o in ('-p', '--port'):
+            elif o in ('-p', '--port'):
                 port = a
             elif o in ('-s', '--suffix'):
                 suffix = a
@@ -127,7 +126,9 @@ def main():
         if action == 'create':
             if port is None or suffix is None:
                 raise getopt.GetoptError('port or suffix is None')
-            target = 'http://jupyter-' + jupyterhub_user + ':' + port
+            hostname = socket.gethostname()
+            target = 'http://' + hostname + ':' + port
+
             if os.path.isfile(args[0]):
                 source_code = args[0]
             else:
