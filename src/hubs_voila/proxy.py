@@ -9,15 +9,14 @@ class Proxy(object):
     '''
     
     url = 'http://proxy:8001/api/routes'
-    headers = {
-        'Authorization': 'token {token}'
-    }
+    headers = {}
     path_prefix = '/voila'
     data = None
     token = None
 
     def __init__(self):
         self.token = os.environ['CONFIGPROXY_AUTH_TOKEN']
+        self.headers['Authorization']: 'token {token}'.format(token=self.token)
     
     def status(self):
         '''
