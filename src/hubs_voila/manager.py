@@ -12,6 +12,8 @@ def usage():
     print('''hubs_voila [ACTION] [OPTIONS] [NOTEBOOK_FILENAME]
 
 Voila 서버 실행과 configurable-http-proxy의 사용을 단순화한 운영툴이다.
+CONFIGPROXY_AUTH_TOKEN 가 환경변수로 있어야 한다.
+jupyter terminal 에서 실행하지 않을시 JUPYTERHUB_USER 환경변수가 존재해야 한다.
 
 Actions
 =======
@@ -28,7 +30,8 @@ Options
     Voila 서버의 포트
 -s, --suffix <String>
     JupyterHub에서 Voila 서버의 접근 경로 /voila/<String>
-    브라우저 접근시 "http://JUPYTERHUB_HOST:PORT/voila/<String>"
+    브라우저 접근시 "http://JUPYTERHUB_HOST:PORT/voila/<String>/"
+    traefix 사용시 JUPYTERHUB_HOST:PORT 없이 jupyter 도메인으로 접근 가능하다.
 -b, --back <String(light|dark)>
     바탕 테마로 기본값은 'light'이다.
 -e, --enable_nbextensions

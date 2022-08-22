@@ -1,24 +1,31 @@
 import requests
 import json
+import env
 
 class Proxy(object):
     '''
     hubs의 Configurable-HTTP-Proxy 서버의 사용자 API
+    CONFIGPROXY_AUTH_TOKEN 은 환경변수로 받아야 함
     '''
-
+    
     url = 'http://proxy:8001/api/routes'
     headers = {
-        'Authorization': 'token HubsConfigProxy'
+        'Authorization': 'token {token}'
     }
     path_prefix = '/voila'
     data = None
+    token = None
+
+    def __init__(self):
+        self.token = env['CONFIGPROXY_AUTH_TOKEN']
+        super()
     
     def status(self):
         '''
         Routes에서 '/voila' prefix를 갖는 path 조회 
         '''
         ret = {}
-        res = requests.get(self.url, headers=self.headers)
+        res = requests.get(self.url, headers=self.headers.format(token=self.token))
         for k, v in res.json().items():
             if k.startswith(self.path_prefix):
                 ret[k] = v
@@ -29,7 +36,7 @@ class Proxy(object):
         Routes에서 '/voila' prefix를 갖는 path 삭제
         '''
         url = self.url + self.path_prefix + '/' + path
-        res = requests.delete(url, headers=self.headers)
+        res = requests.delete(url, headers=self.headers.format(token=self.token))
         return res
     
     def create(self, path, target):
@@ -39,5 +46,5 @@ class Proxy(object):
         target_path = self.path_prefix + '/' + path
         url = self.url + target_path
         data = {'target': target}
-        res = requests.post(url, headers=self.headers, data=json.dumps(data))
+        res = requests.post(url, headers=self.headers.format(token=self.token), data=json.dumps(data))
         return res
