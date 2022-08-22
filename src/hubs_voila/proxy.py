@@ -23,7 +23,7 @@ class Proxy(object):
         Routes에서 '/voila' prefix를 갖는 path 조회 
         '''
         ret = {}
-        res = requests.get(self.url, headers=self.headers.format(token=self.token))
+        res = requests.get(self.url, headers=self.headers)
         for k, v in res.json().items():
             if k.startswith(self.path_prefix):
                 ret[k] = v
@@ -34,7 +34,7 @@ class Proxy(object):
         Routes에서 '/voila' prefix를 갖는 path 삭제
         '''
         url = self.url + self.path_prefix + '/' + path
-        res = requests.delete(url, headers=self.headers.format(token=self.token))
+        res = requests.delete(url, headers=self.headers)
         return res
     
     def create(self, path, target):
@@ -44,5 +44,5 @@ class Proxy(object):
         target_path = self.path_prefix + '/' + path
         url = self.url + target_path
         data = {'target': target}
-        res = requests.post(url, headers=self.headers.format(token=self.token), data=json.dumps(data))
+        res = requests.post(url, headers=self.headers, data=json.dumps(data))
         return res
