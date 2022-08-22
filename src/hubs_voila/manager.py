@@ -94,7 +94,7 @@ def main():
  
         opts, args = getopt.getopt(sys.argv[2:], 'p:s:b:t:eh', ['port=', 'suffix=', 'theme=', 'template=', 'enable_nbextensions', 'help'])
         for o, a in opts:
-            elif o in ('-p', '--port'):
+            if o in ('-p', '--port'):
                 port = a
             elif o in ('-s', '--suffix'):
                 suffix = a
