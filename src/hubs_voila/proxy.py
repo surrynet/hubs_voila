@@ -1,6 +1,6 @@
 import requests
 import json
-import env
+import os
 
 class Proxy(object):
     '''
