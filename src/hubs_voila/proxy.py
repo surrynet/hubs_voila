@@ -16,7 +16,7 @@ class Proxy(object):
 
     def __init__(self):
         self.token = os.environ['CONFIGPROXY_AUTH_TOKEN']
-        self.headers['Authorization']: 'token {token}'.format(token=self.token)
+        self.headers['Authorization'] = 'token {token}'.format(token=self.token)
     
     def status(self):
         '''
