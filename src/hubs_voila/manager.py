@@ -118,11 +118,14 @@ def main():
         
         def handler(signum, frame):
             proxy.remove(suffix)
-        
-        signal.signal(
-            signal.SIGINT,
-            handler
-        )
+
+        signals = (signal.SIGINT, signal.SIGTERM)
+        for sig in signals:
+            signal.signal(
+                sig,
+                handler
+            )
+
         if action == 'create':
             if port is None or suffix is None:
                 raise getopt.GetoptError('port or suffix is None')
@@ -148,7 +151,7 @@ def main():
                 for ps in pslist:
                     item = ps.split()
                     pgid = item[3]
-                    os.killpg(int(pgid), signal.SIGINT)
+                    os.killpg(int(pgid), signal.SIGTERM)
                     method(suffix)
                     print('Stop: ' + ' '.join(item[14:]))
         else:
