@@ -33,8 +33,8 @@ Options
     동일한 suffix가 존재하지 않도록 해야 한다.
     브라우저 접근시 "http://JUPYTERHUB_HOST:PORT/voila/<String>/"
     traefix 사용시 JUPYTERHUB_HOST:PORT 없이 jupyter 도메인으로 접근 가능하다.
--b, --back <String(light|dark)>
-    바탕 테마로 기본값은 'light'이다.
+-b, --theme <String(light|dark)>
+    바탕 테마로 기본값은 'dark'이다.
 -e, --enable_nbextensions
     nbextensions 사용유무
     default: False
@@ -55,11 +55,12 @@ Example
 def voila_run(suffix, port, source_code, theme, template, enable_nbextensions):
     cmd = ['voila',
          '--no-browser',
-         '--back=' + theme,
+         '--theme=' + theme,
          '--port=' + str(port),
          '--enable_nbextensions=' + str(enable_nbextensions),
          '--server_url=/voila/' + suffix,
          '--base_url=/voila/' + suffix + '/',
+         '--Voila.ip=0.0.0.0',
         source_code 
         ] 
     if template is not None:
@@ -75,8 +76,8 @@ def main():
     source_code = None
     port = None
     suffix = None
-    theme = 'light'
-    template = None
+    theme = 'dark'
+    template = 'lab'
     enable_nbextensions = False
     help = False
     action = 'status'
@@ -98,7 +99,7 @@ def main():
                 port = a
             elif o in ('-s', '--suffix'):
                 suffix = a
-            elif o in ('-b', '--back'):
+            elif o in ('-b', '--theme'):
                 theme = a
             elif o in ('-t', '--template'):
                 template = a
