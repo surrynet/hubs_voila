@@ -42,6 +42,7 @@ Options
     템플릿
     gridstack
     vuetify-default
+-v, --verbose
 -h, --help
     도움말
 
@@ -52,17 +53,22 @@ Example
     hubs_voila status
     ''')
 
-def voila_run(suffix, port, source_code, theme, template, enable_nbextensions):
-    cmd = ['voila',
-         '--no-browser',
-         '--theme=' + theme,
-         '--port=' + str(port),
-         '--enable_nbextensions=' + str(enable_nbextensions),
-         '--server_url=/voila/' + suffix,
-         '--base_url=/voila/' + suffix + '/',
-         '--Voila.ip=0.0.0.0',
+def voila_run(suffix, port, source_code, theme, template, enable_nbextensions, verbose):
+   cmd = ['voila',
+        '--no-browser',
+        '--theme=' + theme,
+        '--port=' + str(port),
+        '--enable_nbextensions=' + str(enable_nbextensions),
+        '--server_url=/voila/' + suffix,
+        '--base_url=/voila/' + suffix + '/',
+        '--Voila.ip=0.0.0.0',
         source_code 
-        ] 
+    ] 
+    if verbose:
+        cmd.extend([
+            '--Voila.log_level=logging.DEBUG',
+            '--VoilaConfiguration.show_tracebacks=True',
+        ])
     if template is not None:
         cmd.extend(['--template=' + template])
         if template == 'gridstack':
@@ -81,6 +87,7 @@ def main():
     enable_nbextensions = False
     help = False
     action = 'status'
+    verbose = False
 
     try:
         if len(sys.argv) > 1 and sys.argv[1]:
@@ -93,7 +100,7 @@ def main():
             raise getopt.GetoptError('OPTIONS')
             
  
-        opts, args = getopt.getopt(sys.argv[2:], 'p:s:b:t:eh', ['port=', 'suffix=', 'theme=', 'template=', 'enable_nbextensions', 'help'])
+        opts, args = getopt.getopt(sys.argv[2:], 'p:s:b:t:ehv', ['port=', 'suffix=', 'theme=', 'template=', 'enable_nbextensions', 'help', 'verbose'])
         for o, a in opts:
             if o in ('-p', '--port'):
                 port = a
@@ -107,6 +114,8 @@ def main():
                 enable_nbextensions = True
             elif o in ('-h', '--help'):
                 help = True
+            elif o in ('-v', '--verbose'):
+                verbose = True
             else:
                 assert 'Unhandled options'
 
