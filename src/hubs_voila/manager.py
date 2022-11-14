@@ -54,7 +54,7 @@ Example
     ''')
 
 def voila_run(suffix, port, source_code, theme, template, enable_nbextensions, verbose):
-   cmd = ['voila',
+    cmd = ['voila',
         '--no-browser',
         '--theme=' + theme,
         '--port=' + str(port),
@@ -150,7 +150,7 @@ def main():
             ret = json.dumps(proxy.status())
             if ret != '{}':
                 print(ret)
-            t = Thread(target=voila_run, args=(suffix, port, source_code, theme, template, enable_nbextensions))
+            t = Thread(target=voila_run, args=(suffix, port, source_code, theme, template, enable_nbextensions, verbose))
             t.start()
             t.join()
         elif action == 'remove':
