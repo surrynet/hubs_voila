@@ -66,7 +66,7 @@ def voila_run(suffix, port, source_code, theme, template, enable_nbextensions, v
     ] 
     if verbose:
         cmd.extend([
-            '--Voila.log_level=logging.DEBUG',
+            '--Voila.log_level=DEBUG',
             '--VoilaConfiguration.show_tracebacks=True',
         ])
     if template is not None:
